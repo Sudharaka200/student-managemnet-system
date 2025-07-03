@@ -11,6 +11,4 @@ if ($conn->connect_error) {
     exit();
 }
 
-echo "Databse Connected successfully";
-
 ?>
