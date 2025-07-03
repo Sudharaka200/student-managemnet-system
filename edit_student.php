@@ -32,7 +32,7 @@ $conn->close();
 </head>
 <body>
     <h2>Edit Student</h2>
-    <form action="update_student.php" method="POST">
+    <form action="library/update_student.php" method="POST">
         <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student_id); ?>">
 
         <label>Name:</label>
