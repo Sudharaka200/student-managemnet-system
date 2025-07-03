@@ -1,31 +1,50 @@
 <?php
-include '../db.php';
+include 'library/db.php';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Sanitize and validate inputs
-    $student_id = isset($_POST['student_id']) ? intval($_POST['student_id']) : 0;
-    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
-
-    if ($student_id === 0 || empty($name) || empty($email) || empty($phone)) {
-        echo "<script>alert('Invalid input data.'); window.history.back();</script>";
-        exit();
-    }
-
-    // Prepare update query
-    $stmt = $conn->prepare("UPDATE students SET name = ?, email = ?, phone = ? WHERE student_id = ?");
-    $stmt->bind_param("sssi", $name, $email, $phone, $student_id);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Student updated successfully!'); window.location.href='../../index.php';</script>";
-    } else {
-        echo "<script>alert('Update failed. Please try again.'); window.history.back();</script>";
-    }
-
-    $stmt->close();
-    $conn->close();
-} else {
-    echo "<script>alert('Invalid request method.'); window.history.back();</script>";
+// Check if student_id is set in the query string
+if (!isset($_GET['student_id']) || empty($_GET['student_id'])) {
+    echo "<script>alert('No student ID provided.'); window.location.href='index.php';</script>";
+    exit();
 }
+
+$student_id = intval($_GET['student_id']);
+
+// Fetch student details
+$stmt = $conn->prepare("SELECT name, email, phone FROM students WHERE student_id = ?");
+$stmt->bind_param("i", $student_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo "<script>alert('Student not found.'); window.location.href='index.php';</script>";
+    exit();
+}
+
+$student = $result->fetch_assoc();
+$stmt->close();
+$conn->close();
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Student</title>
+</head>
+<body>
+    <h2>Edit Student</h2>
+    <form action="update_student.php" method="POST">
+        <input type="hidden" name="student_id" value="<?php echo htmlspecialchars($student_id); ?>">
+
+        <label>Name:</label>
+        <input type="text" name="name" value="<?php echo htmlspecialchars($student['name']); ?>" required><br><br>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($student['email']); ?>" required><br><br>
+
+        <label>Phone:</label>
+        <input type="text" name="phone" value="<?php echo htmlspecialchars($student['phone']); ?>" required><br><br>
+
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

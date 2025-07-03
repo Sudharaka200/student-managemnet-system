@@ -147,13 +147,13 @@ $result_enrollments = $conn->query($sql_enrollments);
         <?php
         if ($result_students_table->num_rows > 0) {
           while ($row = $result_students_table->fetch_assoc()) {
-            echo "<tr>
+echo "<tr>
               <td>" . htmlspecialchars($row["student_id"]) . "</td>
               <td>" . htmlspecialchars($row["name"]) . "</td>
               <td>" . htmlspecialchars($row["email"]) . "</td>
               <td>" . htmlspecialchars($row["phone"]) . "</td>
               <td>
-                  <a href='edit_student.php?id=<?= " . $row["student_id"] . " ?>' class='btn btn-info btn-sm'>Edit</a>
+                <a href='edit_student.php?student_id=" . $row["student_id"] . "' class='btn btn-info btn-sm'>Update</a>
                 <form action='library/sql/delete.php' method='POST' style='display:inline-block;' onsubmit='return confirm(\"Delete this student?\")'>
                   <input type='hidden' name='student_id' value='" . $row["student_id"] . "'>
                   <button type='submit' class='btn btn-danger btn-sm'>Delete</button>
