@@ -14,10 +14,11 @@
 </head>
 
 <body>
+    <!-- add students -->
     <div class="container">
         <h1 class="text-center mt-5">Student Management System</h1>
         <div class="p-20">
-            <form>
+            <form action="library/sql/students.php" method="POST">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Name</label>
                     <input type="text" class="form-control" name="student_name" aria-describedby="emailHelp">
@@ -29,6 +30,24 @@
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Phone Number</label>
                     <input type="number" class="form-control" name="student_phone" aria-describedby="emailHelp">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- add courses -->
+    <div class="container">
+        <h1 class="text-center mt-5">Courses</h1>
+        <div class="p-20">
+            <form action="library/sql/courses.php" method="POST">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Course Name</label>
+                    <input type="text" class="form-control" name="course_name" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">credits</label>
+                    <input type="number" class="form-control" name="credits" aria-describedby="emailHelp">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
