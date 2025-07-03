@@ -1,3 +1,21 @@
+<?php
+//Db connection
+include 'library/db.php';
+
+//Select Students from studnts table
+$sql = "SELECT student_id, email FROM students";
+$result = $conn->query($sql);
+
+//Select Courses From Course Table
+$sql1 = "SELECT course_id, course_name FROM courses";
+$result1  = $conn->query($sql1);
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,6 +71,47 @@
             </form>
         </div>
     </div>
+
+    <!-- add student to course -->
+    <div class="container">
+        <h1 class="text-center mt-5">Add Students to course</h1>
+        <div class="p-20">
+            <form action="library/sql/enrollment.php" method="POST">
+                <div class="mb-3">
+                    <label for="employeeSelect" class="form-label">Select Students</label>
+                    <select class="form-select" id="employeeSelect">
+                        <option selected disabled>Choose...</option>
+                        <?php
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo '<option value="' . $row["student_id"] . '">' . htmlspecialchars($row["email"]) . '</option>';
+                        }
+                    } else {
+                        echo '<option disabled>No students found</option>';
+                    }
+                    ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="employeeSelect" class="form-label">Select Course</label>
+                    <select class="form-select" id="employeeSelect">
+                        <option selected disabled>Choose...</option>
+                       <?php
+                    if ($result1->num_rows > 0) {
+                        while ($row = $result1->fetch_assoc()) {
+                            echo '<option value="' . $row["course_id"] . '">' . htmlspecialchars($row["course_name"]) . '</option>';
+                        }
+                    } else {
+                        echo '<option disabled>No courses found</option>';
+                    }
+                    ?>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
 
 </body>
 
