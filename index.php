@@ -29,6 +29,7 @@ $result_enrollments = $conn->query($sql_enrollments);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,108 +40,117 @@ $result_enrollments = $conn->query($sql_enrollments);
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<!-- Add Students -->
-<div class="container">
-  <h1 class="text-center mt-5">Student Management System</h1>
-  <div class="p-20">
-    <form action="library/sql/students.php" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" class="form-control" name="student_name" required>
+  <div class="container">
+    <h1 class="text-center p-5 text-primary">Student Management System</h1>
+    <div class="row mx-auto">
+      <div class="col-sm-6">
+        <div class="mt-5 p-4 border border-primary rounded shadow-sm bg-light">
+          <h3 class="text-center mt-5 text-primary">Add Students</h3>
+          <div class="p-20">
+            <form action="library/sql/students.php" method="POST">
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" name="student_name" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="student_email" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="number" class="form-control" name="student_phone" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-control" name="student_email" required>
+      <div class="col-sm-6 mx-auto">
+        <div class="mt-5 p-4 border border-primary rounded shadow-sm bg-light">
+          <h3 class="text-center mb-4 text-primary">Add Course</h3>
+          <form action="library/sql/courses.php" method="POST">
+            <div class="mb-3">
+              <label class="form-label">Course Name</label>
+              <input type="text" class="form-control" name="course_name" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Credits</label>
+              <input type="number" class="form-control" name="credits" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+          </form>
+        </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Phone Number</label>
-        <input type="number" class="form-control" name="student_phone" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+
+    </div>
   </div>
-</div>
 
-<!-- Add Courses -->
-<div class="container">
-  <h1 class="text-center mt-5">Courses</h1>
-  <div class="p-20">
-    <form action="library/sql/courses.php" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Course Name</label>
-        <input type="text" class="form-control" name="course_name" required>
+
+  <!-- Enroll Student to Course -->
+  <div class="container mx-auto">
+    <div class="mt-5 p-4 border border-primary rounded shadow-sm bg-light">
+      <h3 class="text-center mt-5 text-primary">Enroll Student to Course</h3>
+      <div class="p-20">
+        <form action="library/sql/enrollment.php" method="POST">
+          <div class="mb-3">
+            <label class="form-label">Select Student</label>
+            <select class="form-select" name="student_id" required>
+              <option selected disabled>Choose...</option>
+              <?php
+              if ($result_students->num_rows > 0) {
+                while ($row = $result_students->fetch_assoc()) {
+                  echo '<option value="' . $row["student_id"] . '">' . htmlspecialchars($row["email"]) . '</option>';
+                }
+              } else {
+                echo '<option disabled>No students found</option>';
+              }
+              ?>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Select Course</label>
+            <select class="form-select" name="course_id" required>
+              <option selected disabled>Choose...</option>
+              <?php
+              if ($result_courses->num_rows > 0) {
+                while ($row = $result_courses->fetch_assoc()) {
+                  echo '<option value="' . $row["course_id"] . '">' . htmlspecialchars($row["course_name"]) . '</option>';
+                }
+              } else {
+                echo '<option disabled>No courses found</option>';
+              }
+              ?>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Credits</label>
-        <input type="number" class="form-control" name="credits" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
   </div>
-</div>
 
-<!-- Enroll Student to Course -->
-<div class="container">
-  <h1 class="text-center mt-5">Enroll Student to Course</h1>
-  <div class="p-20">
-    <form action="library/sql/enrollment.php" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Select Student</label>
-        <select class="form-select" name="student_id" required>
-          <option selected disabled>Choose...</option>
-          <?php
-          if ($result_students->num_rows > 0) {
-            while ($row = $result_students->fetch_assoc()) {
-              echo '<option value="' . $row["student_id"] . '">' . htmlspecialchars($row["email"]) . '</option>';
-            }
-          } else {
-            echo '<option disabled>No students found</option>';
-          }
-          ?>
-        </select>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Select Course</label>
-        <select class="form-select" name="course_id" required>
-          <option selected disabled>Choose...</option>
-          <?php
-          if ($result_courses->num_rows > 0) {
-            while ($row = $result_courses->fetch_assoc()) {
-              echo '<option value="' . $row["course_id"] . '">' . htmlspecialchars($row["course_name"]) . '</option>';
-            }
-          } else {
-            echo '<option disabled>No courses found</option>';
-          }
-          ?>
-        </select>
-      </div>
-
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-  </div>
-</div>
-
-<!-- Display All Students with enrolled courses-->
-<div class="container mt-5">
-  <h2>All Students</h2>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      if ($result_students_table->num_rows > 0) {
-        while ($row = $result_students_table->fetch_assoc()) {
-          echo "<tr>
+  <!-- Display All Students with enrolled courses-->
+  <div class="container mt-5 p-4 border border-primary rounded shadow-sm bg-light">
+    <h3 class="text-primary text-center">All Students</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        if ($result_students_table->num_rows > 0) {
+          while ($row = $result_students_table->fetch_assoc()) {
+            echo "<tr>
             <td>" . htmlspecialchars($row["student_id"]) . "</td>
             <td>" . htmlspecialchars($row["name"]) . "</td>
             <td>" . htmlspecialchars($row["email"]) . "</td>
@@ -152,36 +162,33 @@ $result_enrollments = $conn->query($sql_enrollments);
               </form>
             </td>
           </tr>";
+          }
+        } else {
+          echo "<tr><td colspan='4'>No students found</td></tr>";
         }
-      } else {
-        echo "<tr><td colspan='4'>No students found</td></tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-</div>
+        ?>
+      </tbody>
+    </table>
+  </div>
 
-<!-- Display Enrolled Courses -->
-<div class="container mt-5">
-  <h2 class="text-center">Enrolled Courses</h2>
   <!-- Display Enrolled Courses -->
-<div class="container mt-5">
-  <h2 class="text-center">Enrolled Courses</h2>
-  <table class="table table-striped table-bordered">
-    <thead>
-      <tr>
-        <th>Student ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Course Name</th>
-        <th>Credits</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-      // Run this query separately before the loop
-      $sql_enrollments = "SELECT 
+  <div class="container mt-5  p-4 border border-primary rounded shadow-sm bg-light">
+    <h3 class="text-center text-primary">Enrolled Courses</h3>
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Course Name</th>
+          <th>Credits</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        // Run this query separately before the loop
+        $sql_enrollments = "SELECT 
           s.student_id,
           s.name AS student_name,
           s.email,
@@ -192,11 +199,11 @@ $result_enrollments = $conn->query($sql_enrollments);
         JOIN students s ON e.student_id = s.student_id
         JOIN courses c ON e.course_id = c.course_id";
 
-      $result_enrollments = $conn->query($sql_enrollments);
+        $result_enrollments = $conn->query($sql_enrollments);
 
-      if ($result_enrollments->num_rows > 0) {
-        while ($row = $result_enrollments->fetch_assoc()) {
-          echo "<tr>
+        if ($result_enrollments->num_rows > 0) {
+          while ($row = $result_enrollments->fetch_assoc()) {
+            echo "<tr>
             <td>" . htmlspecialchars($row["student_id"]) . "</td>
             <td>" . htmlspecialchars($row["student_name"]) . "</td>
             <td>" . htmlspecialchars($row["email"]) . "</td>
@@ -210,16 +217,17 @@ $result_enrollments = $conn->query($sql_enrollments);
               </form>
             </td>
           </tr>";
+          }
+        } else {
+          echo "<tr><td colspan='6'>No enrollments found</td></tr>";
         }
-      } else {
-        echo "<tr><td colspan='6'>No enrollments found</td></tr>";
-      }
-      ?>
-    </tbody>
-  </table>
-</div>
+        ?>
+      </tbody>
+    </table>
+  </div>
 
-</div>
+  </div>
 
 </body>
+
 </html>
